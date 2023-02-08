@@ -1,25 +1,18 @@
-#include <arrow/pretty_print.h>
-#include <arrow/result.h>
 #include <arrow/status.h>
-#include <arrow/table.h>
 #include <iostream>
 
-#include "bookstore.hpp"
 #include "conversion.hpp"
 
-arrow::Status RunTableConversion() {
-    auto bookstore_rows = load_bookstore("../bookstore.xml");
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        std::cerr << argv[0] << " <bookstore xml path>" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    std::shared_ptr<arrow::Table> table;
-
-    ARROW_ASSIGN_OR_RAISE(table, VectorToColumnarTable(bookstore_rows));
-
-    ARROW_RETURN_NOT_OK(arrow::PrettyPrint(*table, {}, &std::cerr));
-    return arrow::Status::OK();
-}
-
-int main(){
-    RunTableConversion();
+    if (XMLToTableConversion(argv[1]) != arrow::Status::OK()) {
+        std::cerr << "Failed to run conversion!\n";
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }

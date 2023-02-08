@@ -1,5 +1,5 @@
 #include <arrow/api.h>
-#include <arrow/result.h>
+#include <arrow/pretty_print.h>
 
 #include <cstdint>
 #include <iomanip>
@@ -90,4 +90,16 @@ arrow::Result<std::shared_ptr<arrow::Table>> VectorToColumnarTable(
         arrow::Table::Make(schema, {category_array, title_array, lang_array, author_array, editions_array});
 
     return table;
+}
+
+arrow::Status XMLToTableConversion(const char* filename) {
+    auto bookstore_rows = LoadBookstoreFromXML(filename);
+    if (!bookstore_rows.empty()) {
+        std::shared_ptr<arrow::Table> table;
+
+        ARROW_ASSIGN_OR_RAISE(table, VectorToColumnarTable(bookstore_rows));
+
+        ARROW_RETURN_NOT_OK(arrow::PrettyPrint(*table, {}, &std::cerr));
+    }
+    return arrow::Status::OK();
 }

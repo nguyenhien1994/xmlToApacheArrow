@@ -2,7 +2,7 @@
 
 struct book_edition {
     std::string isbn;
-    int year;
+    uint32_t year;
     float price;
 };
 
@@ -14,4 +14,4 @@ struct book_row {
     std::vector<book_edition> editions;
 };
 
-std::vector<book_row> load_bookstore(const char* filename);
+std::vector<book_row> LoadBookstoreFromXML(const char* filename);

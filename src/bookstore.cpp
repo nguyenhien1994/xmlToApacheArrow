@@ -5,7 +5,7 @@
 #include "bookstore.hpp"
 #include "../tinyxml2/tinyxml2.h"
 
-void print_book(const std::vector<book_row>& book_store) {
+void PrintBookStore(const std::vector<book_row>& book_store) {
     for (const auto& book : book_store) {
         std::cout << "category: " << book.category << "\n";
         std::cout << "title: " << book.title << "\n";
@@ -20,7 +20,7 @@ void print_book(const std::vector<book_row>& book_store) {
     }
 }
 
-book_row parse(tinyxml2::XMLElement * p_book) {
+book_row ParseBookRow(tinyxml2::XMLElement* p_book) {
     auto get_value = [&p_book](const char* name) -> auto {
         tinyxml2::XMLElement* ptr = p_book->FirstChildElement(name);
         if (ptr) {
@@ -55,7 +55,7 @@ book_row parse(tinyxml2::XMLElement * p_book) {
 
             tinyxml2::XMLElement* p_year = p_edittion->FirstChildElement("year");
             if (p_year) {
-                p_year->QueryIntText(&edition.year);
+                p_year->QueryUnsignedText(&edition.year);
             }
 
             tinyxml2::XMLElement* p_price = p_edittion->FirstChildElement("price");
@@ -72,21 +72,26 @@ book_row parse(tinyxml2::XMLElement * p_book) {
     return std::move(book);
 }
 
-std::vector<book_row> load_bookstore(const char* filename) {
+std::vector<book_row> LoadBookstoreFromXML(const char* filename) {
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(filename);
+    auto error = doc.LoadFile(filename);
+    if (error != tinyxml2::XML_SUCCESS) {
+        std::cerr << "Can't  load XML file: ";
+        doc.PrintError();
+        return {};
+    }
     std::vector<book_row> bookstore;
 
-    tinyxml2::XMLElement * p_root_element = doc.RootElement();
-    tinyxml2::XMLElement * p_book = (p_root_element != nullptr) ? p_root_element->FirstChildElement("book") : nullptr; 
+    tinyxml2::XMLElement* p_root_element = doc.RootElement();
+    tinyxml2::XMLElement* p_book = (p_root_element != nullptr) ? p_root_element->FirstChildElement("book") : nullptr;
 
-    while(p_book){
-        auto b = parse(p_book);
-        bookstore.push_back(b);
+    while (p_book) {
+        auto b = ParseBookRow(p_book);
+        bookstore.emplace_back(std::move(b));
         p_book = p_book->NextSiblingElement("book");
     }
 
-    print_book(bookstore);
+    // PrintBookStore(bookstore);
 
     return bookstore;
 }
