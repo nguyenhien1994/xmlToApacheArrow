@@ -7,8 +7,8 @@
 #include "bookstore.hpp"
 #include "conversion.hpp"
 
-arrow::Status RunRowConversion() {
-    auto bookstore_rows = load_bookstore("bookstore.xml");
+arrow::Status RunTableConversion() {
+    auto bookstore_rows = load_bookstore("../bookstore.xml");
 
     std::shared_ptr<arrow::Table> table;
 
@@ -19,7 +19,7 @@ arrow::Status RunRowConversion() {
 }
 
 int main(){
-    RunRowConversion();
+    RunTableConversion();
 
     return EXIT_SUCCESS;
 }

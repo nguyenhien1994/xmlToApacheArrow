@@ -3,19 +3,20 @@
 #include <string>
 
 #include "bookstore.hpp"
-#include "tinyxml2/tinyxml2.h"
+#include "../tinyxml2/tinyxml2.h"
 
 void print_book(const std::vector<book_row>& book_store) {
     for (const auto& book : book_store) {
-        std::cout << "category: " << book.category << std::endl;
-        std::cout << "title: " << book.title << std::endl;
-        std::cout << "lang: " << book.lang << std::endl;
-        std::cout << "author: " << book.author << std::endl;
+        std::cout << "category: " << book.category << "\n";
+        std::cout << "title: " << book.title << "\n";
+        std::cout << "lang: " << book.lang << "\n";
+        std::cout << "author: " << book.author << "\n";
         for (const auto& edition : book.editions) {
-            std::cout << "\tisbn: " << edition.isbn << std::endl;
-            std::cout << "\tyear: " << edition.year << std::endl;
-            std::cout << "\tprice: " << edition.price << std::endl;
+            std::cout << "\tisbn: " << edition.isbn << "\n";
+            std::cout << "\tyear: " << edition.year << "\n";
+            std::cout << "\tprice: " << edition.price << "\n";
         }
+        std::cout << "\n";
     }
 }
 
@@ -71,9 +72,9 @@ book_row parse(tinyxml2::XMLElement * p_book) {
     return std::move(book);
 }
 
-std::vector<book_row> load_bookstore(std::string filename) {
+std::vector<book_row> load_bookstore(const char* filename) {
     tinyxml2::XMLDocument doc;
-    doc.LoadFile("bookstore.xml");
+    doc.LoadFile(filename);
     std::vector<book_row> bookstore;
 
     tinyxml2::XMLElement * p_root_element = doc.RootElement();

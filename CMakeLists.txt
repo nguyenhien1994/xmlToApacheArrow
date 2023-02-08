@@ -17,11 +17,16 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(ArrowMinimalExample)
+project(xmlToApacheArrow)
 
 option(ARROW_LINK_SHARED "Link to the Arrow shared library" ON)
 
-find_package(Arrow REQUIRED PATHS /home/hiennm/.local/usr/local/)
+if (NOT DEFINED ENV{LOCAL_LIB_PATHS})
+  find_package(Arrow REQUIRED)
+else()
+  message("LOCAL_LIB_PATHS is set: " $ENV{LOCAL_LIB_PATHS})
+  find_package(Arrow REQUIRED PATHS $ENV{LOCAL_LIB_PATHS})
+endif()
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -37,10 +42,14 @@ endif()
 message(STATUS "Arrow version: ${ARROW_VERSION}")
 message(STATUS "Arrow SO version: ${ARROW_FULL_SO_VERSION}")
 
-add_executable(arrow-example main.cpp tinyxml2/tinyxml2.cpp bookstore.cpp conversion.cpp)
+add_executable(arrowTableExample
+src/main.cpp
+src/bookstore.cpp
+src/conversion.cpp
+tinyxml2/tinyxml2.cpp)
 
 if(ARROW_LINK_SHARED)
-  target_link_libraries(arrow-example PRIVATE Arrow::arrow_shared)
+  target_link_libraries(arrowTableExample PRIVATE Arrow::arrow_shared)
 else()
   target_link_libraries(arrow-example PRIVATE Arrow::arrow_static)
 endif()

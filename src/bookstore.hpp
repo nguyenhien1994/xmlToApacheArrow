@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <string>
-
 struct book_edition {
     std::string isbn;
     int year;
@@ -17,4 +14,4 @@ struct book_row {
     std::vector<book_edition> editions;
 };
 
-std::vector<book_row> load_bookstore(std::string filename);
+std::vector<book_row> load_bookstore(const char* filename);
