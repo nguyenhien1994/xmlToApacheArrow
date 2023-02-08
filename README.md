@@ -7,9 +7,9 @@ Example of converting XML to Apache arrow::Table
 This section assumes you already have the Arrow C++ libraries on your system, either after [installing them using a package manager](https://arrow.apache.org/install/) or after [building them yourself](https://arrow.apache.org/docs/developers/cpp/building.html#building-arrow-cpp).
 
 ### How to build and run this example
-- Clone code
+- Clone code with [TinyXML2](https://github.com/leethomason/tinyxml2) as submodule
 ```
-git clone git@github.com:nguyenhien1994/xmlToApacheArrow.git
+git clone --recursive  git@github.com:nguyenhien1994/xmlToApacheArrow.git
 ```
 
 - If you want to build with local user library paths, you can modify the `.env` to approriate paths and run `source .env`
